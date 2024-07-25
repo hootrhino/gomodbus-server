@@ -83,3 +83,8 @@ func (frame *RTUFrame) SetException(exception *Exception) {
 	frame.Function = frame.Function | 0x80
 	frame.Data = []byte{byte(*exception)}
 }
+
+func (frame RTUFrame) String() string {
+	return fmt.Sprintf("RTUFrame (Address: %d, Function:%d, Data: %v, CRC:%d)",
+		frame.Address, frame.Function, frame.Data, frame.CRC)
+}
