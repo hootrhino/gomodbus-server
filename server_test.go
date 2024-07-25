@@ -72,6 +72,7 @@ func TestModbus(t *testing.T) {
 		t.Errorf("expected nil, got %v\n", err)
 		t.FailNow()
 	}
+	t.Log(results)
 
 	results, err = client.ReadCoils(100, 16)
 	if err != nil {

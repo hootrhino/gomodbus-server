@@ -16,7 +16,7 @@ import (
 // The serial read and close has a known race condition.
 // https://github.com/golang/go/issues/10001
 func TestModbusRTU(t *testing.T) {
-	// Create a pair of virutal serial devices.
+	// Create a pair of virtual serial devices.
 	cmd := exec.Command("socat",
 		"pty,raw,echo=0,link=ttyFOO",
 		"pty,raw,echo=0,link=ttyBAR")
@@ -27,7 +27,7 @@ func TestModbusRTU(t *testing.T) {
 	defer cmd.Wait()
 	defer cmd.Process.Kill()
 
-	// Allow the virutal serial devices to be created.
+	// Allow the virtual serial devices to be created.
 	time.Sleep(10 * time.Millisecond)
 
 	// Server

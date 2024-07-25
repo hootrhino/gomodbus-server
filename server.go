@@ -1,17 +1,18 @@
-// Package mbserver implments a Modbus server (slave).
+// Package mbserver implements a Modbus server (slave).
 package mbserver
 
 import (
+	"github.com/hootrhino/goserial"
+	logrus "github.com/sirupsen/logrus"
 	"io"
 	"net"
 	"sync"
-
-	"github.com/hootrhino/goserial"
 )
 
 // Server is a Modbus slave with allocated memory for discrete inputs, coils, etc.
 type Server struct {
 	// Debug enables more verbose messaging.
+	Logger           *logrus.Logger
 	Debug            bool
 	listeners        []net.Listener
 	ports            []serial.Port
@@ -57,6 +58,9 @@ func NewServer() *Server {
 	go s.handler()
 
 	return s
+}
+func (s *Server) SetLogger(Logger *logrus.Logger) {
+	s.Logger = Logger
 }
 
 // RegisterFunctionHandler override the default behavior for a given Modbus function.

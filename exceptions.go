@@ -26,8 +26,8 @@ var (
 	MemoryParityError Exception = 8
 	// GatewayPathUnavailable Specialized for Modbus gateways. Indicates a misconfigured gateway.
 	GatewayPathUnavailable Exception = 10
-	// GatewayTargetDeviceFailedtoRespond Specialized for Modbus gateways. Sent when slave fails to respond.
-	GatewayTargetDeviceFailedtoRespond Exception = 11
+	// GatewayTargetDeviceFailedToRespond Specialized for Modbus gateways. Sent when slave fails to respond.
+	GatewayTargetDeviceFailedToRespond Exception = 11
 )
 
 func (e Exception) Error() string {
@@ -35,32 +35,30 @@ func (e Exception) Error() string {
 }
 
 func (e Exception) String() string {
-	var str string
 	switch e {
 	case Success:
-		str = fmt.Sprintf("Success")
+		return "Success"
 	case IllegalFunction:
-		str = fmt.Sprintf("IllegalFunction")
+		return "IllegalFunction"
 	case IllegalDataAddress:
-		str = fmt.Sprintf("IllegalDataAddress")
+		return "IllegalDataAddress"
 	case IllegalDataValue:
-		str = fmt.Sprintf("IllegalDataValue")
+		return "IllegalDataValue"
 	case SlaveDeviceFailure:
-		str = fmt.Sprintf("SlaveDeviceFailure")
+		return "SlaveDeviceFailure"
 	case AcknowledgeSlave:
-		str = fmt.Sprintf("AcknowledgeSlave")
+		return "AcknowledgeSlave"
 	case SlaveDeviceBusy:
-		str = fmt.Sprintf("SlaveDeviceBusy")
+		return "SlaveDeviceBusy"
 	case NegativeAcknowledge:
-		str = fmt.Sprintf("NegativeAcknowledge")
+		return "NegativeAcknowledge"
 	case MemoryParityError:
-		str = fmt.Sprintf("MemoryParityError")
+		return "MemoryParityError"
 	case GatewayPathUnavailable:
-		str = fmt.Sprintf("GatewayPathUnavailable")
-	case GatewayTargetDeviceFailedtoRespond:
-		str = fmt.Sprintf("GatewayTargetDeviceFailedtoRespond")
+		return "GatewayPathUnavailable"
+	case GatewayTargetDeviceFailedToRespond:
+		return "GatewayTargetDeviceFailedToRespond"
 	default:
-		str = fmt.Sprintf("unknown")
+		return "unknown"
 	}
-	return str
 }

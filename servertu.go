@@ -2,7 +2,6 @@ package mbserver
 
 import (
 	"io"
-	"log"
 
 	"github.com/hootrhino/goserial"
 )
@@ -12,7 +11,7 @@ import (
 func (s *Server) ListenRTU(serialConfig *serial.Config) (err error) {
 	port, err := serial.Open(serialConfig)
 	if err != nil {
-		log.Fatalf("failed to open %s: %v\n", serialConfig.Address, err)
+		s.Logger.Errorf("failed to open %s: %v\n", serialConfig.Address, err)
 	}
 	s.ports = append(s.ports, port)
 
@@ -26,6 +25,7 @@ func (s *Server) ListenRTU(serialConfig *serial.Config) (err error) {
 }
 
 func (s *Server) acceptSerialRequests(port serial.Port) {
+	buffer := make([]byte, 512)
 SkipFrameError:
 	for {
 		select {
@@ -34,33 +34,22 @@ SkipFrameError:
 		default:
 		}
 
-		buffer := make([]byte, 512)
-
 		bytesRead, err := port.Read(buffer)
 		if err != nil {
 			if err != io.EOF {
-				log.Printf("serial read error %v\n", err)
+				s.Logger.Errorf("serial read error %v\n", err)
 			}
 			return
 		}
 
 		if bytesRead != 0 {
-
-			// Set the length of the packet to the number of read bytes.
 			packet := buffer[:bytesRead]
-
 			frame, err := NewRTUFrame(packet)
 			if err != nil {
-				log.Printf("bad serial frame error %v\n", err)
-				//The next line prevents RTU server from exiting when it receives a bad frame. Simply discard the erroneous
-				//frame and wait for next frame by jumping back to the beginning of the 'for' loop.
-				log.Printf("Keep the RTU server running!!\n")
+				s.Logger.Errorf("bad serial frame error %v\n", err)
 				continue SkipFrameError
-				//return
 			}
-
 			request := &Request{port, frame}
-
 			s.requestChan <- request
 		}
 	}
