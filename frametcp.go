@@ -86,3 +86,7 @@ func (frame *TCPFrame) SetException(exception *Exception) {
 func (frame *TCPFrame) setLength() {
 	frame.Length = uint16(len(frame.Data) + 2)
 }
+func (frame TCPFrame) String() string {
+	return fmt.Sprintf("TCPFrame (TransactionIdentifier: %d, ProtocolIdentifier:%d, Length: %d, Device:%d, Device:%d, Data: %v)",
+		frame.TransactionIdentifier, frame.ProtocolIdentifier, frame.Length, frame.Device, frame.Function, frame.Data)
+}
