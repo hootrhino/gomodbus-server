@@ -2,15 +2,18 @@
 package mbserver
 
 import (
-	"github.com/hootrhino/goserial"
-	logrus "github.com/sirupsen/logrus"
+	"context"
 	"io"
 	"net"
 	"sync"
+
+	"github.com/hootrhino/goserial"
+	logrus "github.com/sirupsen/logrus"
 )
 
 // Server is a Modbus slave with allocated memory for discrete inputs, coils, etc.
 type Server struct {
+	Ctx context.Context
 	// Debug enables more verbose messaging.
 	Logger           *logrus.Logger
 	Debug            bool
@@ -33,6 +36,11 @@ type Request struct {
 }
 
 // NewServer creates a new Modbus server (slave).
+func NewServerWithContext(Ctx context.Context) *Server {
+	Server := NewServer()
+	Server.Ctx = Ctx
+	return Server
+}
 func NewServer() *Server {
 	s := &Server{}
 

@@ -25,6 +25,11 @@ func (s *Server) accept(listen net.Listener) error {
 			}()
 			packet := make([]byte, 512)
 			for {
+				select {
+				case <-s.Ctx.Done():
+					return
+				default:
+				}
 				bytesRead, err := conn.Read(packet)
 				if err != nil {
 					if err != io.EOF {

@@ -29,11 +29,12 @@ func (s *Server) acceptSerialRequests(port serial.Port) {
 SkipFrameError:
 	for {
 		select {
+		case <-s.Ctx.Done():
+			return
 		case <-s.portsCloseChan:
 			return
 		default:
 		}
-
 		bytesRead, err := port.Read(buffer)
 		if err != nil {
 			if err != io.EOF {
