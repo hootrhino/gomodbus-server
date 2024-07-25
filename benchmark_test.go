@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/goburrow/modbus"
+	"github.com/hootrhino/gomodbus"
 )
 
 type serverClient struct {
