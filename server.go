@@ -104,10 +104,14 @@ func (s *Server) Close() {
 	for _, listen := range s.listeners {
 		listen.Close()
 	}
-
-	close(s.portsCloseChan)
+	select {
+	case _, ok := <-s.portsCloseChan:
+		if !ok {
+			close(s.portsCloseChan)
+		}
+	default:
+	}
 	s.portsWG.Wait()
-
 	for _, port := range s.ports {
 		port.Close()
 	}
