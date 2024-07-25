@@ -87,6 +87,6 @@ func (frame *TCPFrame) setLength() {
 	frame.Length = uint16(len(frame.Data) + 2)
 }
 func (frame TCPFrame) String() string {
-	return fmt.Sprintf("TCPFrame (TransactionIdentifier: %d, ProtocolIdentifier:%d, Length: %d, Device:%d, Device:%d, Data: %v)",
+	return fmt.Sprintf("TCPFrame (TransactionIdentifier: %d, ProtocolIdentifier:%d, Length: %d, Device:%d, Function:%d, Data: %v)",
 		frame.TransactionIdentifier, frame.ProtocolIdentifier, frame.Length, frame.Device, frame.Function, frame.Data)
 }
