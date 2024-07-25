@@ -14,7 +14,7 @@ func (s *Server) accept(listen net.Listener) error {
 			if strings.Contains(err.Error(), "use of closed network connection") {
 				return nil
 			}
-			s.Logger.Errorf("Unable to accept connections: %#v\n", err)
+			s.Logger.Errorf("Unable to accept connections: %#v", err)
 			return err
 		}
 		s.Logger.Debug("Tcp connected:", conn.RemoteAddr())
@@ -28,7 +28,7 @@ func (s *Server) accept(listen net.Listener) error {
 				bytesRead, err := conn.Read(packet)
 				if err != nil {
 					if err != io.EOF {
-						s.Logger.Errorf("read error %v\n", err)
+						s.Logger.Errorf("read error %v", err)
 					}
 					return
 				}
@@ -37,12 +37,11 @@ func (s *Server) accept(listen net.Listener) error {
 
 				frame, err := NewTCPFrame(packet)
 				if err != nil {
-					s.Logger.Errorf("bad packet error %v\n", err)
+					s.Logger.Errorf("bad packet error %v", err)
 					return
 				}
-
+				s.Logger.Debug("Read Frame:", frame)
 				request := &Request{conn, frame}
-
 				s.requestChan <- request
 			}
 		}(conn)
@@ -53,7 +52,7 @@ func (s *Server) accept(listen net.Listener) error {
 func (s *Server) ListenTCP(addressPort string) (err error) {
 	listen, err := net.Listen("tcp", addressPort)
 	if err != nil {
-		s.Logger.Errorf("Failed to Listen: %v\n", err)
+		s.Logger.Errorf("Failed to Listen: %v", err)
 		return err
 	}
 	s.listeners = append(s.listeners, listen)
@@ -65,7 +64,7 @@ func (s *Server) ListenTCP(addressPort string) (err error) {
 func (s *Server) ListenTLS(addressPort string, config *tls.Config) (err error) {
 	listen, err := tls.Listen("tcp", addressPort, config)
 	if err != nil {
-		s.Logger.Errorf("Failed to Listen on TLS: %v\n", err)
+		s.Logger.Errorf("Failed to Listen on TLS: %v", err)
 		return err
 	}
 	s.listeners = append(s.listeners, listen)

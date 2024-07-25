@@ -49,6 +49,7 @@ SkipFrameError:
 				s.Logger.Errorf("bad serial frame error %v\n", err)
 				continue SkipFrameError
 			}
+			s.Logger.Debug("Read Frame:", frame)
 			request := &Request{port, frame}
 			s.requestChan <- request
 		}
