@@ -23,6 +23,7 @@ type Server struct {
 	portsCloseChan   chan struct{}
 	requestChan      chan *Request
 	function         [256](func(*Server, Framer) ([]byte, *Exception))
+	callbacks        [](func(*Server, Framer))
 	DiscreteInputs   []byte
 	Coils            []byte
 	HoldingRegisters []uint16
@@ -49,7 +50,8 @@ func NewServer() *Server {
 	s.Coils = make([]byte, 65536)
 	s.HoldingRegisters = make([]uint16, 65536)
 	s.InputRegisters = make([]uint16, 65536)
-
+	s.callbacks = []func(*Server, Framer){}
+	s.function = [256]func(*Server, Framer) ([]byte, *Exception){}
 	// Add default functions.
 	s.function[1] = ReadCoils
 	s.function[2] = ReadDiscreteInputs
@@ -77,6 +79,11 @@ func (s *Server) RegisterFunctionHandler(funcCode uint8, function func(*Server, 
 	s.function[funcCode] = function
 }
 
+// OnRequest
+func (s *Server) SetOnRequest(request *Request, Func func(*Server, Framer)) {
+	s.callbacks = append(s.callbacks, Func)
+}
+
 func (s *Server) handle(request *Request) Framer {
 	var exception *Exception
 	var data []byte
@@ -90,11 +97,12 @@ func (s *Server) handle(request *Request) Framer {
 	} else {
 		exception = &IllegalFunction
 	}
-
 	if exception != &Success {
 		response.SetException(exception)
 	}
-
+	for _, cb := range s.callbacks {
+		cb(s, request.frame)
+	}
 	return response
 }
 
