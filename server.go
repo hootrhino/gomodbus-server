@@ -80,7 +80,7 @@ func (s *Server) RegisterFunctionHandler(funcCode uint8, function func(*Server, 
 }
 
 // OnRequest
-func (s *Server) SetOnRequest(request *Request, Func func(*Server, Framer)) {
+func (s *Server) SetOnRequest(Func func(*Server, Framer)) {
 	s.callbacks = append(s.callbacks, Func)
 }
 
