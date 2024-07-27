@@ -69,7 +69,9 @@ func WriteSingleCoil(s *Server, frame Framer) ([]byte, *Exception) {
 	register, value := registerAddressAndValue(frame)
 	// TODO Should we use 0 for off and 65,280 (FF00 in hexadecimal) for on?
 	if value != 0 {
-		value = 1
+		value = 0xff
+	} else {
+		value = 0x00
 	}
 	s.Coils[register] = byte(value)
 	return frame.GetData()[0:4], &Success

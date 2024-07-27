@@ -115,7 +115,7 @@ In the following example, the Modbus server will be configured to listen on
 		DataBits: 8,
 		StopBits: 1,
 		Parity:   "N",
-		Timeout:  10 * time.Second})
+		Timeout:  10 * time.Second},1)
 	if err != nil {
 		t.Fatalf("failed to listen, got %v\n", err)
 	}
@@ -147,7 +147,11 @@ Information on [serial port settings](https://godoc.org/github.com/hootrhino/gos
 ## Server Customization
 
  RegisterFunctionHandler allows the default server functionality to be overridden for a Modbus function code.
+<<<<<<< HEAD
  ```go
+=======
+```go
+>>>>>>> ce6fed969ee082f1390385778c121eea15bc16b9
 func (s *Server) RegisterFunctionHandler(funcCode uint8, function func(*Server, Framer) ([]byte, *Exception))
  ```
 

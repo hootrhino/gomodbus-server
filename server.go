@@ -22,7 +22,7 @@ type Server struct {
 	portsWG          sync.WaitGroup
 	portsCloseChan   chan struct{}
 	requestChan      chan *Request
-	function         [256](func(*Server, Framer) ([]byte, *Exception))
+	function         [64](func(*Server, Framer) ([]byte, *Exception))
 	callbacks        [](func(*Server, Framer))
 	DiscreteInputs   []byte
 	Coils            []byte
@@ -46,12 +46,12 @@ func NewServer() *Server {
 	s := &Server{}
 
 	// Allocate Modbus memory maps.
-	s.DiscreteInputs = make([]byte, 65536)
-	s.Coils = make([]byte, 65536)
-	s.HoldingRegisters = make([]uint16, 65536)
-	s.InputRegisters = make([]uint16, 65536)
+	s.DiscreteInputs = make([]byte, 64)
+	s.Coils = make([]byte, 64)
+	s.HoldingRegisters = make([]uint16, 64)
+	s.InputRegisters = make([]uint16, 64)
 	s.callbacks = []func(*Server, Framer){}
-	s.function = [256]func(*Server, Framer) ([]byte, *Exception){}
+	s.function = [64]func(*Server, Framer) ([]byte, *Exception){}
 	// Add default functions.
 	s.function[1] = ReadCoils
 	s.function[2] = ReadDiscreteInputs
@@ -119,6 +119,7 @@ func (s *Server) handler() {
 
 // Close stops listening to TCP/IP ports and closes serial ports.
 func (s *Server) Close() {
+
 	for _, listen := range s.listeners {
 		listen.Close()
 	}
