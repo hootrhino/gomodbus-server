@@ -110,8 +110,10 @@ func (s *Server) handle(request *Request) Framer {
 func (s *Server) handler() {
 	for {
 		request := <-s.requestChan
-		response := s.handle(request)
-		request.conn.Write(response.Bytes())
+		go func() {
+			response := s.handle(request)
+			request.conn.Write(response.Bytes())
+		}()
 	}
 }
 
